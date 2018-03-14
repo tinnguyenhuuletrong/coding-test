@@ -1,0 +1,1 @@
+curl -X POST http://localhost:3001/doTest/add -F input=@VerySimple.exe

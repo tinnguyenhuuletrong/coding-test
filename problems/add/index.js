@@ -3,7 +3,7 @@ const utils = require('../../utils')
 const spawn = require('child_process').spawn;
 const MY_DIR = __dirname
 
-function doIt(inputExe) {
+function doIt(inputExe, engine = 'exe') {
 	const AllTestCases = utils.listAllFiles(path.join(MY_DIR, 'testCase'))
 	const jobs = AllTestCases.map(itm => {
 
@@ -19,9 +19,10 @@ function doIt(inputExe) {
 		const limitTimeInSec = module.limitTimeInSec() * 1000
 
 		return new Promise((resolve, reject) => {
-			utils.spawnProcess(inputExe, args, limitTimeInSec)
+			utils.spawnProcess(inputExe, args, limitTimeInSec, engine)
 				.then(returnVal => {
 					const res = returnVal.output.trim();
+					const log = returnVal.log.trim();
 					const timeMs = returnVal.timeMs;
 					resolve({
 						name: itm,
@@ -29,6 +30,7 @@ function doIt(inputExe) {
 						input: args,
 						expected: expectedOutput,
 						output: res,
+						log: log,
 						exeTimeMs: timeMs
 					})
 
@@ -40,6 +42,7 @@ function doIt(inputExe) {
 						input: args,
 						expected: expectedOutput,
 						error: err.toString(),
+						log: log,
 						exeTimeMs: -1
 					})
 				})

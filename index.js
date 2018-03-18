@@ -6,8 +6,9 @@ const fileUpload = require('express-fileupload');
 const uniqid = require('uniqid');
 const ProblemSet = require('./problems')
 
-
 const app = express()
+
+app.use('/web', express.static('web'))
 
 // app.use(bodyParser.json())
 app.use(fileUpload({
@@ -26,8 +27,18 @@ app.get('/', (req, res) => {
     })
 })
 
+app.get('/problems', (req, res) => {
+    res.json(Object.keys(ProblemSet))
+})
+
+
+const EXTENSION_MAP = {
+    'exe': 'exe',
+    'node': 'js'
+}
 app.post('/doTest/:probId', function(req, res) {
     const probId = req.params.probId
+    const engine = req.body.engine || 'exe'
 
     const problem = ProblemSet[probId]
     if (problem == null)
@@ -43,9 +54,9 @@ app.post('/doTest/:probId', function(req, res) {
 
     if (!input)
         return res.status(400).send('File naming error. It must be `input.exe`');
-
+    
     const hash = uniqid(`${probId}`)
-    const tmpPath = `./_tmp/${hash}.exe`
+    const tmpPath = `./_tmp/${hash}.${EXTENSION_MAP[engine]}`
 
     input.mv(tmpPath, (err) => {
         if (err)
@@ -54,7 +65,7 @@ app.post('/doTest/:probId', function(req, res) {
                 msg: err
             })
 
-        problem(tmpPath)
+        problem(tmpPath, engine)
             .then(testResult => {
                 res.json({
                     _id: hash,

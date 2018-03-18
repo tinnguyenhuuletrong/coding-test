@@ -1,12 +1,13 @@
 function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
+	return Math.floor(Math.random() * Math.floor(max));
 }
 
-const a = getRandomInt(10000) - getRandomInt(10000)
-const b = getRandomInt(10000) - getRandomInt(10000)
-
+let a;
+let b;
 module.exports.input = function () {
-	return [a,b]
+	a = getRandomInt(10000) - getRandomInt(10000)
+	b = getRandomInt(10000) - getRandomInt(10000)
+	return [a, b]
 }
 
 module.exports.expectedOutput = function () {
@@ -15,4 +16,8 @@ module.exports.expectedOutput = function () {
 
 module.exports.limitTimeInSec = function () {
 	return 1
+}
+
+function solution(a, b) {
+	return a + b;
 }

@@ -17,3 +17,6 @@
 ``` sh
 	npm run prod
 ```
+
+## Simple Webpage
+Access [http://localhost:3001/web/](http://localhost:3001/web/)

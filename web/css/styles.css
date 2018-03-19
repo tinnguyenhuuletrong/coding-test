@@ -1,6 +1,15 @@
 body {
     padding-top: 5rem;
   }
-  .starter-template {
+.starter-template {
     padding: 3rem 1.5rem
-  }
+}
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+} 

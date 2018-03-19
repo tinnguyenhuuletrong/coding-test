@@ -55,25 +55,58 @@
     </nav>
 
     <main role="main" class="container">
-
-        <div class="starter-template">
+        <div class="starter-template row">
             <h1>Upload your Files: </h1>
         </div>
-        <form>
+        <form id="contestSubmitForm">
             <div class="form-group">
                 <label for="contestID">Contest ID:</label>
-                <input class="form-control" id="contestID" aria-describedby="idHelp" placeholder="Contest Id">
+                <input class="form-control" id="contestId" aria-describedby="idHelp" placeholder="Contest Id" required>
                 <small id="idHelp" class="form-text text-muted">You can find your contest Id somewhere!</small>
 
                 <label for="exampleFormControlSelect1">Example select</label>
                 <select class="form-control" id="problemSets">
                 </select>
                 <label for="solutionFile">Solutions:</label>
-                <input type="file" class="form-control-file" id="solutionFile">
+                <input type="file" class="form-control-file" id="solutionFile" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <div class="w-100" style="padding-bottom: 10px;">
+            <hr>
+        </div>
+
+        <!-- Test Result History -->
+        <div class="row justify-content-between">
+            <div class="col" id="testRunId">
+                RunId: 
+            </div>
+            <div class="col-2" id="testSummary">
+                Pass: 10/10
+            </div>
+        </div>
+        <div class="w-100">
+            <div id="testResultContainer">
+                <template id="testCasteTemplate">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button id="title" class="btn btn-link" data-toggle="collapse" data-target="#collapseContent" aria-expanded="true" aria-controls="collapseOne">
+                                    TestCase 1
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseContent" class="collapse" aria-labelledby="headingOne" data-parent="#testResultContainer">
+                            <div id="detail" class="card-body">
+                                Output Expected
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
 
     </main>
     <!-- /.container -->
@@ -86,73 +119,8 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="./scripts/main.js"></script>
 
-    <script> 
-        _domVer = 0;
-        States = {
-            problems: [],
-            _v: 0
-        }
-        MountComps = []
-
-        window.addEventListener('load', function () {
-            console.log('All assets are loaded')
-            fetchProblemLists();
-        })
-
-        function fetchProblemLists() {
-            fetch('/problems')
-                .then(res => {
-                    return res.json()
-                })
-                .then(problemData => {
-                    console.log('fetchProblemLists', problemData);
-                    this.setState({ problems: problemData });
-                })
-                .catch(err => console.error(err))
-        }
-
-
-        function updateProblemSelectComp(props) {
-            const dom = document.getElementById('problemSets');
-            dom.innerHTML = '';
-            const items = props.problems.forEach(itm => {
-                const option = document.createElement('option');
-                option.text = itm;
-                option.value = itm;
-                dom.add(option);
-            })
-        }
-
-        const SelectComponent = updateWhenPropsChange({
-            "problems": "problems"
-        })(updateProblemSelectComp)
-        MountComps.push(SelectComponent)
-        
-        // My React Ver - Maily for learning
-        function setState(obj) {
-            States = { ...States, ...obj, _v: States._v + 1 };
-            domUpdate();
-        }
-
-        function domUpdate() {
-            if (_domVer == States._v) return;
-            _domVer = States._v;
-            MountComps.forEach(itm => itm(States));
-        }
-
-        function updateWhenPropsChange(props) {
-            const cache = {}
-            return func => newState => {
-                if (!Object.keys(props).some(key => newState[key] != cache[key]))
-                    return;
-                Object.keys(props).forEach(key => cache[key] = newState[key])
-                func({ ...cache });
-            }
-        }
-
-
-    </script>
 </body>
 
 </html>

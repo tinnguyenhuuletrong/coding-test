@@ -46,18 +46,16 @@ app.post('/doTest/:probId', function(req, res) {
             error: 404,
             msg: `Problem ${probId} Not Available`
         })
-
+        
     if (!req.files)
         return res.status(400).send('No files were uploaded.');
 
     let input = req.files.input;
-
+    
     if (!input)
         return res.status(400).send('File naming error. It must be `input.exe`');
-    
     const hash = uniqid(`${probId}`)
     const tmpPath = `./_tmp/${hash}.${EXTENSION_MAP[engine]}`
-
     input.mv(tmpPath, (err) => {
         if (err)
             return res.status(500).json({

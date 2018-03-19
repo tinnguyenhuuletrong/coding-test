@@ -1,6 +1,7 @@
 _domVer = 0;
 States = {
     problems: [],
+    active: 0,
     _v: 0
 }
 MountComps = []
@@ -118,17 +119,32 @@ const TestResultComponent = updateWhenPropsChange({
 })(updateTestResultContainer)
 MountComps.push(TestResultComponent)
 
+// Component Description
+function updateDocDes(props) {
+    var converter = new showdown.Converter({ghCodeBlocks: true, omitExtraWLInCodeBlocks:true});
+    const des = document.getElementById('problemDescription');
+    des.innerHTML = converter.makeHtml(props.problems[props.active].doc);
+}
+const DescriptionComponent = updateWhenPropsChange({
+    "active": "active",
+    "problems": "problems"
+})(updateDocDes)
+MountComps.push(DescriptionComponent)
+
 // Component Select
 function updateProblemSelectComp(props) {
     const dom = document.getElementById('problemSets');
     dom.innerHTML = '';
     const items = props.problems.forEach(itm => {
         const option = document.createElement('option');
-        option.text = itm;
-        option.value = itm;
+        option.text = itm.name;
+        option.value = itm.name;
         dom.add(option);
     })
-    dom.value = props.problems[0];
+
+    // active default 
+    dom.value = props.problems[0].name;
+    setState({active: 0});
 }
 
 const SelectComponent = updateWhenPropsChange({

@@ -28,9 +28,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/problems', (req, res) => {
-    res.json(Object.keys(ProblemSet))
+    res.json(Object.keys(ProblemSet).map(key => {
+        return {
+            name: key,
+            doc: ProblemSet[key].doc
+        }
+    }))
 })
-
 
 const EXTENSION_MAP = {
     'exe': 'exe',
@@ -63,7 +67,7 @@ app.post('/doTest/:probId', function(req, res) {
                 msg: err
             })
 
-        problem(tmpPath, engine)
+        problem.exe(tmpPath, engine)
             .then(testResult => {
                 res.json({
                     _id: hash,

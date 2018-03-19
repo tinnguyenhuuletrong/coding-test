@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const utils = require('../../utils')
 const spawn = require('child_process').spawn;
@@ -52,4 +53,5 @@ function doIt(inputExe, engine = 'exe') {
 	return Promise.all(jobs)
 }
 
-module.exports = doIt
+module.exports.exe = doIt
+module.exports.doc = fs.readFileSync(path.join(MY_DIR, 'doc.md'), 'utf8')
